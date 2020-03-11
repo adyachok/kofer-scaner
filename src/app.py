@@ -21,7 +21,7 @@ app = faust.App('scanner', broker=KAFKA_BROKER_URL, debug=True)
 model_updates_topic = app.topic('model-updates',
                                 value_type=DeploymentConfigInfo)
 model_metadata_updates_topic = app.topic('model-metadata-updates',
-                                         value_type=DeploymentConfigInfo)
+                                         value_type=ModelMetadata)
 
 
 @app.agent(model_updates_topic)
