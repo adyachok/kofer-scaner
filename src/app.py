@@ -15,6 +15,7 @@ logger = get_logger('app')
 KAFKA_BROKER_URL = os.getenv('KAFKA_BROKER_URL')
 if not KAFKA_BROKER_URL:
     KAFKA_BROKER_URL = 'kafka://localhost'
+MODEL_REST_PORT = 8501
 
 app = faust.App('scanner', broker=KAFKA_BROKER_URL, debug=True)
 model_updates_topic = app.topic('model-updates',
@@ -60,7 +61,7 @@ async def scan(dc_infos):
 
 
 async def fetch_server_metadata(session, model_name, model_version):
-    url = f'http://{model_name}/v1/models/{model_name}/' \
+    url = f'http://{model_name}:{MODEL_REST_PORT}/v1/models/{model_name}/' \
           f'versions/{model_version}/metadata'
     # url = 'https://mod-dummy-501-zz-test.22ad.bi-x.openshiftapps.com/' \
     #       'v1/models/mod-dummy/versions/9/metadata'
@@ -70,7 +71,8 @@ async def fetch_server_metadata(session, model_name, model_version):
 
 async def fetch_business_metadata(session, model_name):
     data = json.dumps({"signature_name": "info", "inputs": True})
-    url = f'http://{model_name}/v1/models/{model_name}:predict'
+    url = f'http://{model_name}:{MODEL_REST_PORT}/v1/models/' \
+          f'{model_name}:predict'
     # url = "https://mod-dummy-501-zz-test.22ad.bi-x.openshiftapps.com/" \
     #       "v1/models/mod-dummy:predict"
     async with session.post(url, data=data) as response:
