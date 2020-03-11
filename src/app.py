@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import asyncio
 import json
+import os
 
 import aiohttp
 import faust
@@ -11,7 +12,11 @@ from utils.logger import get_logger
 
 logger = get_logger('app')
 
-app = faust.App('scanner', broker='kafka://localhost', debug=True)
+KAFKA_BROKER_URL = os.getenv('KAFKA_BROKER_URL')
+if not KAFKA_BROKER_URL:
+    KAFKA_BROKER_URL = 'kafka://localhost'
+
+app = faust.App('scanner', broker=KAFKA_BROKER_URL, debug=True)
 model_updates_topic = app.topic('model-updates',
                                 value_type=DeploymentConfigInfo)
 model_metadata_updates_topic = app.topic('model-metadata-updates',
