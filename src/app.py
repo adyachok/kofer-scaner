@@ -33,7 +33,7 @@ async def scan(dc_infos):
         logger.info(f'Model {dc.name} with version {dc.latest_version} is '
                     f'updated. Gathering the model metadata.')
         async with aiohttp.ClientSession() as session:
-            url = f'{dc.name}:{MODEL_REST_PORT}/v1/models/{dc.name}'
+            url = f'http://{dc.name}:{MODEL_REST_PORT}/v1/models/{dc.name}'
             # url = 'https://mod-dummy-501-zz-test.22ad.bi-x.openshiftapps.' \
             # com/v1/models/mod-dummy'
             async with session.get(url) as response:
@@ -61,7 +61,7 @@ async def scan(dc_infos):
 
 
 async def fetch_server_metadata(session, model_name, model_version):
-    url = f'{model_name}:{MODEL_REST_PORT}/v1/models/{model_name}/' \
+    url = f'http://{model_name}:{MODEL_REST_PORT}/v1/models/{model_name}/' \
           f'versions/{model_version}/metadata'
     # url = 'https://mod-dummy-501-zz-test.22ad.bi-x.openshiftapps.com/' \
     #       'v1/models/mod-dummy/versions/9/metadata'
@@ -71,7 +71,7 @@ async def fetch_server_metadata(session, model_name, model_version):
 
 async def fetch_business_metadata(session, model_name):
     data = json.dumps({"signature_name": "info", "inputs": True})
-    url = f'{model_name}:{MODEL_REST_PORT}/v1/models/' \
+    url = f'http://{model_name}:{MODEL_REST_PORT}/v1/models/' \
           f'{model_name}:predict'
     # url = "https://mod-dummy-501-zz-test.22ad.bi-x.openshiftapps.com/" \
     #       "v1/models/mod-dummy:predict"
