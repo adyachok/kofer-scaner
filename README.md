@@ -15,6 +15,14 @@ no strong, tight relations in it. This means that every part of ZZ can be
 modified - removed - rewritten accordingly to the needs of customer.
 
 
+### Interaction process
+
+
+![alt text][schema]
+
+[schema]: img/how%20scanner%20works.png "Title"
+
+
 ### Installation
 
 #### Run locally
