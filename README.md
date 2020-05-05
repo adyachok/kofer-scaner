@@ -4,7 +4,33 @@
 
 [logo]: img/scanner.png "Title"
 
+### Description
+The Scanner service is meant to query model on business and server metadata it has.
+This kind of service fits only [TensorFlow Serving](https://www.tensorflow.org/tfx/guide/serving) 
+instances, but any other pattern can be easily implemented.
+
+**DISCLAIMER** the service is the integral part of ZZ project, but because the 
+project is build using **service choreography architecture pattern** there are 
+no strong, tight relations in it. This means that every part of ZZ can be 
+modified - removed - rewritten accordingly to the needs of customer.
+
+
 ### Installation
+
+#### Run locally
+
+
+To run locally application requires Kafka broker.
+
+To install seamlessly **Kafka** broker we recommend 
+[Kafka-docker](https://github.com/wurstmeister/kafka-docker) project. 
+In the project you can find **docker-compose-single-broker.yml**
+
+We suggest to create next alias
+
+```bash alias kafka="docker-compose --file {PATH_TO}/kafka-docker/docker-compose-single-broker.yml up```
+
+#### For local and dev/prod installations
 
   1. Create Kafka topic:
   
