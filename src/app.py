@@ -23,6 +23,22 @@ model_updates_topic = app.topic('model-updates',
 model_metadata_updates_topic = app.topic('model-metadata-updates',
                                          value_type=ModelMetadata)
 
+debug_models = {
+    'mod-dummy': {
+        'business_metadata': 'https://mod-dummy-501-zz-test.22ad.bi-x.' \
+                             'openshiftapps.com/v1/models/mod-dummy:predict',
+        'server_metadata': 'https://mod-dummy-501-zz-test.22ad.bi-x.' \
+                           'openshiftapps.com/v1/models/mod-dummy/versions/'
+                           '9/metadata'},
+    'mod-text-class': {
+        'business_metadata': 'https://mod-text-class-501-zz-test.22ad.bi-x.'
+                             'openshiftapps.com/v1/models/mod-text-class'
+                             ':predict',
+        'server_metadata': 'https://mod-text-class-501-zz-test.22ad.bi-x'
+                           '.openshiftapps.com/v1/models/mod-text-class/'
+                           'versions/2/metadata'}
+}
+
 
 @app.agent(model_updates_topic)
 async def scan(dc_infos):
@@ -65,8 +81,11 @@ async def fetch_server_metadata(session, model_name, model_version):
     url = f'http://{model_name}:{MODEL_REST_PORT}/v1/models/{model_name}/' \
           f'versions/{model_version}/metadata'
     if os.getenv('SCANNER_DEBUG_URL'):
-        url = 'https://mod-dummy-501-zz-test.22ad.bi-x.' \
-              'openshiftapps.com/v1/models/mod-dummy/versions/9/metadata'
+        if model_name in ['mod-dummy', 'mod-text-class']:
+            url = debug_models[model_name]['server_metadata']
+        else:
+            logger.error(f'Cannot use model name {model_name} in debug mode '
+                         f'no server metadata url available.')
     async with session.get(url) as response:
         return await response.json()
 
@@ -76,8 +95,11 @@ async def fetch_business_metadata(session, model_name):
     url = f'http://{model_name}:{MODEL_REST_PORT}/v1/models/' \
           f'{model_name}:predict'
     if os.getenv('SCANNER_DEBUG_URL'):
-        url = "https://mod-dummy-501-zz-test.22ad.bi-x." \
-              "openshiftapps.com/v1/models/mod-dummy:predict"
+        if model_name in ['mod-dummy', 'mod-text-class']:
+            url = debug_models[model_name]['business_metadata']
+        else:
+            logger.error(f'Cannot use model name {model_name} in debug mode '
+                         f'no business metadata url available.')
     async with session.post(url, data=data) as response:
         return await response.json()
 
