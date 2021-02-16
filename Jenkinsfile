@@ -5,9 +5,7 @@
 @Library('ods-jenkins-shared-library@production') _
 
 /* generated jenkins file used for building and deploying scaner in projects zz */
-def final projectId = 'zz'
-def final componentId = 'scaner'
-def final credentialsId = "${projectId}-cd-cd-user-with-password"
+
 def dockerRegistry
 node {
   dockerRegistry = env.DOCKER_REGISTRY
